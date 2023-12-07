@@ -1,0 +1,12 @@
+using Dietary.Base;
+using System.ComponentModel.DataAnnotations.Schema;
+using Dietary.DataAccess.Extensions;
+using Dietary.Helpers;
+
+namespace Dietary.DataAccess.Entities
+{
+    public class CustomName : BaseEntity
+    {
+
+    }
+}

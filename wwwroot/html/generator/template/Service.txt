@@ -1,0 +1,16 @@
+using Dietary.Base;
+using Dietary.DataAccess.Entities;
+using Dietary.DataAccess.Models;
+
+namespace Dietary.DataAccess.Services
+{
+    public interface ICustomNameService : IBaseService<CustomName>
+    {
+
+    }
+    public class CustomNameService : BaseService<CustomName>, ICustomNameService
+    {
+        public CustomNameService(AppDbContext appDbContext) : base(appDbContext) { }
+
+    }
+}
