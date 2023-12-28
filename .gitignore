@@ -7,5 +7,6 @@
 /bin
 /obj
 /Properties
+/wwwroot/model
 /wwwroot/upload
 /wwwroot/html/prototype

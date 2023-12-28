@@ -20,10 +20,13 @@ namespace Dietary.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _service;
-        public UserController(ILogger<UserController> logger, IUserService service) : base(service)
+        private readonly FatSecretService _fatSecretService;
+        
+        public UserController(ILogger<UserController> logger, IUserService service, FatSecretService fatSecretService) : base(service)
         {
             _logger = logger;
             _service = service;
+            _fatSecretService = fatSecretService;
         }
         [AllowAnonymous]
         [HttpPost("login")]
@@ -65,6 +68,13 @@ namespace Dietary.Controllers
         public override Task<ActionResult> Create(RegisterUserRequest model)
         {
             return base.Create(model);
+        }
+        [AllowAnonymous]
+        [HttpGet("test")]
+        public async Task<ActionResult> Test()
+        {
+
+            return Ok(await _fatSecretService.GetAccessToken());
         }
     }
 }

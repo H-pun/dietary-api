@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Dietaary API",
+        Title = "Dietary API",
         Description = "API untuk aplikasi Dietary",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
@@ -138,6 +138,8 @@ Assembly.GetExecutingAssembly()
         var serviceType = assignedTypes.GetInterfaces().First(i => !i.IsGenericType);
         builder.Services.AddScoped(serviceType, assignedTypes);
     });
+
+builder.Services.AddScoped<FatSecretService>();
 
 var app = builder.Build();
 
