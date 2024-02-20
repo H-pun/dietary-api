@@ -4,8 +4,8 @@ namespace Dietary.DataAccess.Models
 {
     public class LoginRequest : BaseModel
     {
-        private string _username;
-        public string Username { get => _username; set => _username = value?.ToLower(); }
+        private string _email;
+        public string Email { get => _email; set => _email = value?.ToLower(); }
         public string Password { get; set; }
     }
 }

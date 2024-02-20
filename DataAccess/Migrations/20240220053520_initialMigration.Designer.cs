@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dietary.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231206064313_initialMigration")]
+    [Migration("20240220053520_initialMigration")]
     partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,10 +46,6 @@ namespace Dietary.DataAccess.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("text")
                         .HasColumnName("password");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("text")
-                        .HasColumnName("role");
 
                     b.Property<string>("Username")
                         .HasColumnType("text")

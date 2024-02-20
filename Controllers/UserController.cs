@@ -34,7 +34,7 @@ namespace Dietary.Controllers
         {
             try
             {
-                object result = await _service.Login(loginRequest.Username, loginRequest.Password);
+                object result = await _service.Login(loginRequest.Email, loginRequest.Password);
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), result);
             }
             catch (HttpRequestException ex)
@@ -68,13 +68,6 @@ namespace Dietary.Controllers
         public override Task<ActionResult> Create(RegisterUserRequest model)
         {
             return base.Create(model);
-        }
-        [AllowAnonymous]
-        [HttpGet("test")]
-        public async Task<ActionResult> Test()
-        {
-
-            return Ok(await _fatSecretService.GetAccessToken());
         }
     }
 }

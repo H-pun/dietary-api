@@ -10,15 +10,15 @@ namespace Dietary.DataAccess.Services
 {
     public interface IUserService : IBaseService<User>
     {
-        Task<LoginResponse> Login(string username, string password);
+        Task<LoginResponse> Login(string email, string password);
         Task ChangePassword(ChangePasswordRequest model);
     }
     public class UserService : BaseService<User>, IUserService
     {
         public UserService(AppDbContext appDbContext) : base(appDbContext) { }
-        public async Task<LoginResponse> Login(string username, string password)
+        public async Task<LoginResponse> Login(string email, string password)
         {
-            User user = await _appDbContext.Set<User>().FirstOrDefaultAsync(x => x.Username == username);
+            User user = await _appDbContext.Set<User>().FirstOrDefaultAsync(x => x.Email == email);
             LoginResponse loginResponse = new();
 
             if (user != null)
@@ -29,7 +29,7 @@ namespace Dietary.DataAccess.Services
                 List<Claim> claims = new()
                 {
                     new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new(ClaimTypes.Role, user.Role.ToString())
+                    // new(ClaimTypes.Role, user.Role.ToString())
                 };
                 
                 user.AppToken = JwtHelper.CreateToken(claims.ToArray(), 72);
@@ -38,7 +38,7 @@ namespace Dietary.DataAccess.Services
                 await _appDbContext.SaveChangesAsync();
             }
             else
-                throw new HttpRequestException("Username not found!", null, HttpStatusCode.NotFound);
+                throw new HttpRequestException("email not found!", null, HttpStatusCode.NotFound);
 
             return loginResponse;
         }

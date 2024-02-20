@@ -18,7 +18,6 @@ namespace Dietary.DataAccess.Migrations
                     name = table.Column<string>(type: "text", nullable: true),
                     username = table.Column<string>(type: "text", nullable: true),
                     password = table.Column<string>(type: "text", nullable: true),
-                    role = table.Column<string>(type: "text", nullable: true),
                     app_token = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
