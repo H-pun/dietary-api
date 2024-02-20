@@ -15,5 +15,7 @@ namespace Dietary.DataAccess.Models
         public string Status { get; set; }
         public string Feedback { get; set; }
         public dynamic Foods { get; set; }
+        public DateTime AddedAt { get; set; }
+        public string FilePath { get; set; }
     }
 }
