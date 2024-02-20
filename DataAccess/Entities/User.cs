@@ -10,6 +10,6 @@ namespace Dietary.DataAccess.Entities
         public string Password { get => _password; set => _password = _password == null ? value?.HashPassword() : value; }
         public string AppToken { get; set; }
         public UserData UserData { get; set; }
-        public FoodDiary FoodDiary { get; set; }
+        public ICollection<FoodDiary> FoodDiary { get; set; } = new HashSet<FoodDiary>();
     }
 }
