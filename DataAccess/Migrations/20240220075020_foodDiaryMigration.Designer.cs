@@ -3,6 +3,7 @@ using System;
 using Dietary.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dietary.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240220075020_foodDiaryMigration")]
+    partial class foodDiaryMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,20 +43,12 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("file_path");
 
-                    b.Property<Guid>("IdUser")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id_user");
-
                     b.Property<string>("Title")
                         .HasColumnType("text")
                         .HasColumnName("title");
 
                     b.HasKey("Id")
                         .HasName("pk_food_diary");
-
-                    b.HasIndex("IdUser")
-                        .IsUnique()
-                        .HasDatabaseName("ix_food_diary_id_user");
 
                     b.ToTable("food_diary", (string)null);
                 });
@@ -141,18 +135,6 @@ namespace Dietary.DataAccess.Migrations
                     b.ToTable("user_data", (string)null);
                 });
 
-            modelBuilder.Entity("Dietary.DataAccess.Entities.FoodDiary", b =>
-                {
-                    b.HasOne("Dietary.DataAccess.Entities.User", "User")
-                        .WithOne("FoodDiary")
-                        .HasForeignKey("Dietary.DataAccess.Entities.FoodDiary", "IdUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_food_diary_user_id_user");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Dietary.DataAccess.Entities.UserData", b =>
                 {
                     b.HasOne("Dietary.DataAccess.Entities.User", "User")
@@ -167,8 +149,6 @@ namespace Dietary.DataAccess.Migrations
 
             modelBuilder.Entity("Dietary.DataAccess.Entities.User", b =>
                 {
-                    b.Navigation("FoodDiary");
-
                     b.Navigation("UserData");
                 });
 #pragma warning restore 612, 618
