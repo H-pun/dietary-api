@@ -120,6 +120,14 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<AbstractModelValidator<BaseModel>>();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(1); // Sesuaikan dengan kebutuhan Anda
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 //builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IFileProvider>(
@@ -146,6 +154,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseAuthentication();
 
