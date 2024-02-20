@@ -7,6 +7,7 @@ namespace Dietary.DataAccess.Models
 {
     public class CreateFoodDiaryRequest : BaseModel
     {
+        public Guid IdUser { get; set; }
         public string Title { get; set; }
         public string Category { get; set; }
         public DateTime AddedAt { get; set; }

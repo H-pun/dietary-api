@@ -8,6 +8,7 @@ namespace Dietary.DataAccess.Models
     public class DetailFoodDiaryResponse : BaseModel
     {
         public Guid Id { get; set; }
+        public Guid IdUser { get; set; }
         public float TotalCaloriesToday { get; set; }
         public float MaxDailyBmrCalories { get; set; }
         public float TotalFoodCalories { get; set; }
