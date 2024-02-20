@@ -9,6 +9,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Net;
 
 namespace Dietary.Base
 {
@@ -98,7 +99,7 @@ namespace Dietary.Base
             }
             if (data == null)
             {
-                throw new ArgumentException("Data not found!");
+                throw new HttpRequestException("ID not found!", null, HttpStatusCode.NotFound);
             }
             model.MapToModel(data);
             return model;

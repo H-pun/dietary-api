@@ -24,5 +24,22 @@ namespace Dietary.Controllers
             _logger = logger;
             _service = service;
         }
+
+        public override async Task<ActionResult<DetailUserDataResponse>> GetById(Guid id)
+        {
+            try
+            {
+                DetailUserDataResponse model = await _baseService.Get<DetailUserDataResponse>(x => x.IdUser == id);
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), model);
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ErrorApiResponse(ex.Message, statusCode: (int)ex.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
+        }
     }
 }

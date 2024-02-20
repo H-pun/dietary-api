@@ -74,10 +74,6 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("email");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
                     b.Property<string>("Password")
                         .HasColumnType("text")
                         .HasColumnName("password");
