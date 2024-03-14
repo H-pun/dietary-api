@@ -120,7 +120,7 @@ namespace Dietary.Base
             }
             else
             {
-                if (includedProperty.Length == 0)
+                if (includedProperty is null || includedProperty.Length == 0)
                     entities = _appDbContext.Set<TEntity>().Where(expression).AsNoTracking().ToList();
                 else
                     entities = _appDbContext.Set<TEntity>().Include(includedProperty).Where(expression).AsNoTracking().ToList();
