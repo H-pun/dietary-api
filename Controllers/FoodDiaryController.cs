@@ -25,6 +25,20 @@ namespace Dietary.Controllers
             _service = service;
         }
 
+        [HttpGet("user")]
+        public virtual ActionResult<List<DetailFoodDiaryResponse>> GetByIdUser(DetailFoodDiaryRequest data)
+        {
+            try
+            {
+                List<DetailFoodDiaryResponse> model = _baseService.GetAll<DetailFoodDiaryResponse>(x => x.IdUser == data.IdUser && (!data.Date.HasValue || x.AddedAt.Date == data.Date.Value.Date));
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), model);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
+        }
+
         public override Task<ActionResult> Create([FromForm] CreateFoodDiaryRequest model)
         {
             return base.Create(model);

@@ -11,6 +11,10 @@ namespace Dietary.DataAccess.Entities
         public string Title { get; set; }
         public string Category { get; set; }
         public DateTime AddedAt { get; set; }
+        public string Status { get; set; }
+        public double Calories { get; set; }
+        public double MaDailyCalorie { get; set; }
+        public string Feedback { get; set; }
         public string FilePath
         {
             get => _filePath;
