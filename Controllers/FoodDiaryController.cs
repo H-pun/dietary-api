@@ -26,11 +26,11 @@ namespace Dietary.Controllers
         }
 
         [HttpGet("user")]
-        public virtual ActionResult<List<DetailFoodDiaryResponse>> GetByIdUser(Guid id, DateTime? date)
+        public virtual ActionResult<List<DetailFoodDiaryResponse>> GetByIdUser(Guid idUser, DateTime? date)
         {
             try
             {
-                List<DetailFoodDiaryResponse> model = _baseService.GetAll<DetailFoodDiaryResponse>(x => x.IdUser == id && (!date.HasValue || x.AddedAt.Date == date.Value.Date));
+                List<DetailFoodDiaryResponse> model = _baseService.GetAll<DetailFoodDiaryResponse>(x => x.IdUser == idUser && (!date.HasValue || x.AddedAt.Date == date.Value.Date));
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), model);
             }
             catch (Exception ex)
