@@ -17,7 +17,7 @@ namespace Dietary.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -53,9 +53,9 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id_user");
 
-                    b.Property<double>("MaDailyCalorie")
+                    b.Property<double>("MaxDailyCalorie")
                         .HasColumnType("double precision")
-                        .HasColumnName("ma_daily_calorie");
+                        .HasColumnName("max_daily_calorie");
 
                     b.Property<string>("Status")
                         .HasColumnType("text")
@@ -133,6 +133,10 @@ namespace Dietary.DataAccess.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("text")
                         .HasColumnName("username");
+
+                    b.Property<float>("WaistCircumference")
+                        .HasColumnType("real")
+                        .HasColumnName("waist_circumference");
 
                     b.Property<float>("Weight")
                         .HasColumnType("real")

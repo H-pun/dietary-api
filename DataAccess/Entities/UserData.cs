@@ -13,6 +13,7 @@ namespace Dietary.DataAccess.Entities
         public int Age { get; set; }
         public float Weight { get; set; }
         public float Height { get; set; }
+        public float WaistCircumference { get; set; }
         public string Gender { get; set; }
         public string Goal { get; set; }
         public float WeightTarget { get; set; }

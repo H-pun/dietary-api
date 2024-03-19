@@ -13,7 +13,7 @@ namespace Dietary.DataAccess.Entities
         public DateTime AddedAt { get; set; }
         public string Status { get; set; }
         public double Calories { get; set; }
-        public double MaDailyCalorie { get; set; }
+        public double MaxDailyCalorie { get; set; }
         public string Feedback { get; set; }
         public string FilePath
         {
