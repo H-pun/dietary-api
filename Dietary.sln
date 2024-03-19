@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dietary", "Dietary.csproj", "{9FFD6E2C-BB3C-43AF-8456-B47BFA09E49C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dietary", "Dietary.csproj", "{9FFD6E2C-BB3C-43AF-8456-B47BFA09E49C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yolo", "Yolo\Yolo.csproj", "{7A703E7F-95C2-4841-9C12-355F43DD1E76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9FFD6E2C-BB3C-43AF-8456-B47BFA09E49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FFD6E2C-BB3C-43AF-8456-B47BFA09E49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FFD6E2C-BB3C-43AF-8456-B47BFA09E49C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A703E7F-95C2-4841-9C12-355F43DD1E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A703E7F-95C2-4841-9C12-355F43DD1E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A703E7F-95C2-4841-9C12-355F43DD1E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A703E7F-95C2-4841-9C12-355F43DD1E76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
