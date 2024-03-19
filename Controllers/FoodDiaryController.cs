@@ -35,6 +35,7 @@ namespace Dietary.Controllers
         {
             try
             {
+                string baseDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
                 string fileName = imgFile.SetFileName(Guid.NewGuid().ToString());
                 await UploadFileAsync(new()
                 {
@@ -42,9 +43,9 @@ namespace Dietary.Controllers
                     FilePath = $"predict/{fileName}"
                 });
 
-                string modelPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "model", "best.onnx");
-                string imgPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload", "predict", fileName);
-                string plotPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload", "predict", $"plot-{fileName}");
+                string modelPath = Path.Combine(baseDir, "model", "best.onnx");
+                string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
+                string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
                 using var predictor = YoloV8Predictor.Create(modelPath);
 
