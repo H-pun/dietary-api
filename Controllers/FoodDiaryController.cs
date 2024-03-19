@@ -61,7 +61,12 @@ namespace Dietary.Controllers
             }
             catch (Exception ex)
             {
-                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message, ex);
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message,
+                new
+                {
+                    OuterException = ex.Message,
+                    InnerException = ex.InnerException.Message,
+                });
             }
         }
         [HttpGet("user")]
