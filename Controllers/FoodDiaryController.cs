@@ -7,7 +7,7 @@ using Dietary.DataAccess.Models.Constants;
 using Dietary.DataAccess.Models;
 using Dietary.DataAccess.Services;
 using Compunet.YoloV8;
-// using Compunet.YoloV8.Plotting;
+using Compunet.YoloV8.Plotting;
 using SixLabors.ImageSharp;
 using Dietary.DataAccess.Extensions;
 using static Dietary.Helpers.FileHelper;
@@ -37,6 +37,7 @@ namespace Dietary.Controllers
             {
                 string baseDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
                 string fileName = imgFile.SetFileName(Guid.NewGuid().ToString());
+                
                 await UploadFileAsync(new()
                 {
                     File = imgFile,
@@ -52,9 +53,9 @@ namespace Dietary.Controllers
                 var result = await predictor.DetectAsync(imgPath);
 
                 using var image = Image.Load(imgPath);
-                // using var ploted = await result.PlotImageAsync(image);
+                using var ploted = await result.PlotImageAsync(image);
 
-                // ploted.Save(plotPath);
+                ploted.Save(plotPath);
 
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), result);
 
