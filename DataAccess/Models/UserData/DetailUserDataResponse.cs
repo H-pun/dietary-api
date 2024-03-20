@@ -21,7 +21,7 @@ namespace Dietary.DataAccess.Models
         public string ActivityLevel { get; set; }
         public DetailUserDataResponse()
         {
-            IncludeProperty(new string[] { "User" });
+            IncludeProperty(["User"]);
         }
 
         public override void MapToModel<TEntity>(TEntity entity)

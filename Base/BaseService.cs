@@ -26,13 +26,9 @@ namespace Dietary.Base
         List<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> expression = null) where TModel : BaseModel, new();
     }
 
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : BaseEntity
+    public class BaseService<TEntity>(AppDbContext appDbContext) : IBaseService<TEntity> where TEntity : BaseEntity
     {
-        protected readonly AppDbContext _appDbContext;
-        public BaseService(AppDbContext appDbContext)
-        {
-            _appDbContext = appDbContext;
-        }
+        protected readonly AppDbContext _appDbContext = appDbContext;
 
         public virtual async Task<TEntity> Create<TModel>(TModel model) where TModel : BaseModel
         {

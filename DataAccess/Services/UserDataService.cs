@@ -8,9 +8,7 @@ namespace Dietary.DataAccess.Services
     {
 
     }
-    public class UserDataService : BaseService<UserData>, IUserDataService
+    public class UserDataService(AppDbContext appDbContext) : BaseService<UserData>(appDbContext), IUserDataService
     {
-        public UserDataService(AppDbContext appDbContext) : base(appDbContext) { }
-
     }
 }

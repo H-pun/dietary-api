@@ -11,19 +11,14 @@ namespace Dietary.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserDataController : BaseController<
+    public class UserDataController(ILogger<UserDataController> logger, IUserDataService service) : BaseController<
         CreateUserDataRequest,
         UpdateUserDataRequest,
         DetailUserDataResponse,
-        UserData>
+        UserData>(service)
     {
-        private readonly ILogger<UserDataController> _logger;
-        private readonly IUserDataService _service;
-        public UserDataController(ILogger<UserDataController> logger, IUserDataService service) : base(service)
-        {
-            _logger = logger;
-            _service = service;
-        }
+        private readonly ILogger<UserDataController> _logger = logger;
+        private readonly IUserDataService _service = service;
 
         public override async Task<ActionResult<DetailUserDataResponse>> GetById(Guid id)
         {

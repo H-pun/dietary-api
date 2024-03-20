@@ -12,22 +12,16 @@ namespace Dietary.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserController : BaseController<
+    public class UserController(ILogger<UserController> logger, IUserService service, FatSecretService fatSecretService) : BaseController<
         RegisterUserRequest,
         UpdateUserRequest,
         DetailUserResponse,
-        User>
+        User>(service)
     {
-        private readonly ILogger<UserController> _logger;
-        private readonly IUserService _service;
-        private readonly FatSecretService _fatSecretService;
-        
-        public UserController(ILogger<UserController> logger, IUserService service, FatSecretService fatSecretService) : base(service)
-        {
-            _logger = logger;
-            _service = service;
-            _fatSecretService = fatSecretService;
-        }
+        private readonly ILogger<UserController> _logger = logger;
+        private readonly IUserService _service = service;
+        private readonly FatSecretService _fatSecretService = fatSecretService;
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginRequest loginRequest)

@@ -13,9 +13,8 @@ namespace Dietary.DataAccess.Services
         Task<LoginResponse> Login(string email, string password);
         Task ChangePassword(ChangePasswordRequest model);
     }
-    public class UserService : BaseService<User>, IUserService
+    public class UserService(AppDbContext appDbContext) : BaseService<User>(appDbContext), IUserService
     {
-        public UserService(AppDbContext appDbContext) : base(appDbContext) { }
         public async Task<LoginResponse> Login(string email, string password)
         {
             User user = await _appDbContext.Set<User>().FirstOrDefaultAsync(x => x.Email == email);

@@ -11,30 +11,23 @@ using Compunet.YoloV8.Plotting;
 using SixLabors.ImageSharp;
 using Dietary.DataAccess.Extensions;
 using static Dietary.Helpers.FileHelper;
-using System.Dynamic;
 
 namespace Dietary.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class FoodDiaryController : BaseController<
+    public class FoodDiaryController(ILogger<FoodDiaryController> logger, IFoodDiaryService service) : BaseController<
         CreateFoodDiaryRequest,
         UpdateFoodDiaryRequest,
         DetailFoodDiaryResponse,
-        FoodDiary>
+        FoodDiary>(service)
     {
-        private readonly ILogger<FoodDiaryController> _logger;
-        private readonly IFoodDiaryService _service;
-        public FoodDiaryController(ILogger<FoodDiaryController> logger, IFoodDiaryService service) : base(service)
-        {
-            _logger = logger;
-            _service = service;
-        }
+        private readonly ILogger<FoodDiaryController> _logger = logger;
+        private readonly IFoodDiaryService _service = service;
 
         [HttpPost("predict")]
         public virtual async Task<ActionResult> Predict(IFormFile imgFile)
         {
-            dynamic obj = default;
             try
             {
                 string baseDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
@@ -48,49 +41,34 @@ namespace Dietary.Controllers
 
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
-                string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
+                // string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
                 using var predictor = YoloV8Predictor.Create(modelPath);
 
                 var result = await predictor.DetectAsync(imgPath);
 
-                obj = result.ToExpando();
-
                 using var image = Image.Load(imgPath);
-                using var ploted = await result.PlotImageAsync(image);
 
-                ploted.Save(plotPath);
+                // using var ploted = await result.PlotImageAsync(image);
+                // ploted.Save(plotPath);
+
+                if (System.IO.File.Exists(imgPath))
+                {
+                    System.IO.File.Delete(imgPath);
+                    _logger.LogInformation("File Deleted!");
+                }
 
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), result);
 
             }
             catch (Exception ex)
             {
-                obj.ex = new
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message,
+                new
                 {
-                    Message = "Unable to generate plot",
-                    OuterException = new
-                    {
-                        ex.Data,
-                        ex.HelpLink,
-                        ex.HResult,
-                        ex.Message,
-                        ex.Source,
-                        ex.StackTrace,
-                        ex.TargetSite
-                    },
-                    InnerException = new
-                    {
-                        ex.InnerException.Data,
-                        ex.InnerException.HelpLink,
-                        ex.InnerException.HResult,
-                        ex.InnerException.Message,
-                        ex.InnerException.Source,
-                        ex.InnerException.StackTrace,
-                        ex.InnerException.TargetSite
-                    }
-                };
-                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message, obj);
+                    OuterException = ex.Message,
+                    InnerException = ex.InnerException.Message,
+                });
             }
         }
         [HttpGet("user")]

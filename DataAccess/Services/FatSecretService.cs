@@ -29,7 +29,7 @@ namespace Dietary.DataAccess.Services
             _configuration = configuration;
             _httpContext = httpContextAccessor.HttpContext;
             var byteArray = Encoding.ASCII.GetBytes($"{configuration["FatSecretClientId"]}:{configuration["FatSecretClientSecret"]}");
-            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
         public async Task<AccessTokenResponse> GetAccessToken()
         {

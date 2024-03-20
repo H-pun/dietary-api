@@ -16,17 +16,14 @@ namespace Dietary.Base
         ModelCreate,
         ModelUpdate,
         ModelDetail,
-        TEntity> : ControllerBase
+        TEntity>(IBaseService<TEntity> baseService) : ControllerBase
         where ModelCreate : BaseModel
         where ModelUpdate : BaseModel
         where ModelDetail : BaseModel, new()
         where TEntity : BaseEntity
     {
-        protected IBaseService<TEntity> _baseService;
-        public BaseController(IBaseService<TEntity> baseService)
-        {
-            _baseService = baseService;
-        }
+        protected IBaseService<TEntity> _baseService = baseService;
+
         [HttpPost]
         public virtual async Task<ActionResult> Create(ModelCreate model)
         {

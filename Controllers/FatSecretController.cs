@@ -12,16 +12,11 @@ namespace Dietary.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class FatSecretController : ControllerBase
+    public class FatSecretController(ILogger<FatSecretController> logger, FatSecretService fatSecretService) : ControllerBase
     {
-        private readonly ILogger<FatSecretController> _logger;
-        private readonly FatSecretService _fatSecretService;
+        private readonly ILogger<FatSecretController> _logger = logger;
+        private readonly FatSecretService _fatSecretService = fatSecretService;
 
-        public FatSecretController(ILogger<FatSecretController> logger, FatSecretService fatSecretService)
-        {
-            _logger = logger;
-            _fatSecretService = fatSecretService;
-        }
         [AllowAnonymous]
         [HttpGet("get-token")]
         public async Task<ActionResult> GetAccessToken()
