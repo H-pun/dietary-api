@@ -29,13 +29,13 @@ namespace Dietary.DataAccess.Extensions
         //     // return data.GetType().GetProperties()
         //     //     .Select(x => new KeyValuePair<string, string>(x .Name, x.GetValue(data)?.ToString())).ToList();
         // }
-        // public static dynamic ToExpando(this object data)
-        // {
-        //     string json = JsonConvert.SerializeObject(data);
-        //     return JsonConvert.DeserializeObject<ExpandoObject>(json);
-        //     // var expando = new ExpandoObject() as IDictionary<string, object>;
-        //     // foreach (var property in data.GetType().GetProperties())
-        //     //     expando.Add(property.Name, property.GetValue(data));
-        // }
+        public static dynamic ToExpando(this object data)
+        {
+            string json = JsonConvert.SerializeObject(data);
+            return JsonConvert.DeserializeObject<ExpandoObject>(json);
+            // var expando = new ExpandoObject() as IDictionary<string, object>;
+            // foreach (var property in data.GetType().GetProperties())
+            //     expando.Add(property.Name, property.GetValue(data));
+        }
     }
 }

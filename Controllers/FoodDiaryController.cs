@@ -11,6 +11,7 @@ using Compunet.YoloV8.Plotting;
 using SixLabors.ImageSharp;
 using Dietary.DataAccess.Extensions;
 using static Dietary.Helpers.FileHelper;
+using System.Dynamic;
 
 namespace Dietary.Controllers
 {
@@ -33,11 +34,12 @@ namespace Dietary.Controllers
         [HttpPost("predict")]
         public virtual async Task<ActionResult> Predict(IFormFile imgFile)
         {
+            dynamic obj = default;
             try
             {
                 string baseDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
                 string fileName = imgFile.SetFileName(Guid.NewGuid().ToString());
-                
+
                 await UploadFileAsync(new()
                 {
                     File = imgFile,
@@ -52,6 +54,8 @@ namespace Dietary.Controllers
 
                 var result = await predictor.DetectAsync(imgPath);
 
+                obj = result.ToExpando();
+
                 using var image = Image.Load(imgPath);
                 using var ploted = await result.PlotImageAsync(image);
 
@@ -62,12 +66,31 @@ namespace Dietary.Controllers
             }
             catch (Exception ex)
             {
-                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message,
-                new
+                obj.ex = new
                 {
-                    OuterException = ex.Message,
-                    InnerException = ex.InnerException.Message,
-                });
+                    Message = "Unable to generate plot",
+                    OuterException = new
+                    {
+                        ex.Data,
+                        ex.HelpLink,
+                        ex.HResult,
+                        ex.Message,
+                        ex.Source,
+                        ex.StackTrace,
+                        ex.TargetSite
+                    },
+                    InnerException = new
+                    {
+                        ex.InnerException.Data,
+                        ex.InnerException.HelpLink,
+                        ex.InnerException.HResult,
+                        ex.InnerException.Message,
+                        ex.InnerException.Source,
+                        ex.InnerException.StackTrace,
+                        ex.InnerException.TargetSite
+                    }
+                };
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message, obj);
             }
         }
         [HttpGet("user")]
