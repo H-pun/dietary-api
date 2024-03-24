@@ -3,6 +3,7 @@ using System;
 using Dietary.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dietary.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240324160248_foodMigration")]
+    partial class foodMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,37 +32,33 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<float>("Calories")
-                        .HasColumnType("real")
+                    b.Property<double>("Calories")
+                        .HasColumnType("double precision")
                         .HasColumnName("calories");
 
-                    b.Property<float>("Carbohydrate")
-                        .HasColumnType("real")
+                    b.Property<double>("Carbohydrate")
+                        .HasColumnType("double precision")
                         .HasColumnName("carbohydrate");
 
-                    b.Property<float>("Fat")
-                        .HasColumnType("real")
+                    b.Property<double>("Fat")
+                        .HasColumnType("double precision")
                         .HasColumnName("fat");
 
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<float>("Protein")
-                        .HasColumnType("real")
+                    b.Property<double>("Protein")
+                        .HasColumnType("double precision")
                         .HasColumnName("protein");
+
+                    b.Property<double>("Sugar")
+                        .HasColumnType("double precision")
+                        .HasColumnName("sugar");
 
                     b.Property<string>("Unit")
                         .HasColumnType("text")
                         .HasColumnName("unit");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
-
-                    b.Property<string>("WebName")
-                        .HasColumnType("text")
-                        .HasColumnName("web_name");
 
                     b.HasKey("Id")
                         .HasName("pk_food");
@@ -78,8 +77,8 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("added_at");
 
-                    b.Property<float>("Calories")
-                        .HasColumnType("real")
+                    b.Property<double>("Calories")
+                        .HasColumnType("double precision")
                         .HasColumnName("calories");
 
                     b.Property<string>("Category")
@@ -98,8 +97,8 @@ namespace Dietary.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id_user");
 
-                    b.Property<float>("MaxDailyCalories")
-                        .HasColumnType("real")
+                    b.Property<double>("MaxDailyCalories")
+                        .HasColumnType("double precision")
                         .HasColumnName("max_daily_calories");
 
                     b.Property<string>("Status")

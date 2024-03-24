@@ -12,8 +12,8 @@ namespace Dietary.DataAccess.Entities
         public string Category { get; set; }
         public DateTime AddedAt { get; set; }
         public string Status { get; set; }
-        public double Calories { get; set; }
-        public double MaxDailyCalorie { get; set; }
+        public float Calories { get; set; }
+        public float MaxDailyCalories { get; set; }
         public string Feedback { get; set; }
         public string FilePath
         {
