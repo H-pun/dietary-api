@@ -103,23 +103,23 @@ namespace Dietary.Base
 
         public virtual List<TModel> GetAll<TModel>(Expression<Func<TEntity, bool>> expression = null) where TModel : BaseModel, new()
         {
-            List<TModel> models = new();
+            List<TModel> models = [];
             List<TEntity> entities;
             string[] includedProperty = new TModel().GetIncludedProperty();
 
             if (expression == null)
             {
                 if (includedProperty is null || includedProperty.Length == 0)
-                    entities = _appDbContext.Set<TEntity>().AsNoTracking().ToList();
+                    entities = [.. _appDbContext.Set<TEntity>().AsNoTracking()];
                 else
-                    entities = _appDbContext.Set<TEntity>().Include(includedProperty).AsNoTracking().ToList();
+                    entities = [.. _appDbContext.Set<TEntity>().Include(includedProperty).AsNoTracking()];
             }
             else
             {
                 if (includedProperty is null || includedProperty.Length == 0)
-                    entities = _appDbContext.Set<TEntity>().Where(expression).AsNoTracking().ToList();
+                    entities = [.. _appDbContext.Set<TEntity>().Where(expression).AsNoTracking()];
                 else
-                    entities = _appDbContext.Set<TEntity>().Include(includedProperty).Where(expression).AsNoTracking().ToList();
+                    entities = [.. _appDbContext.Set<TEntity>().Include(includedProperty).Where(expression).AsNoTracking()];
             }
 
             if (entities != null)

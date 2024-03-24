@@ -25,13 +25,13 @@ namespace Dietary.DataAccess.Services
                 if (!PasswordHelper.VerifyHashedPassword(user.Password, password))
                     throw new HttpRequestException("Wrong password!", null, HttpStatusCode.Unauthorized);
 
-                List<Claim> claims = new()
-                {
+                List<Claim> claims =
+                [
                     new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     // new(ClaimTypes.Role, user.Role.ToString())
-                };
+                ];
                 
-                user.AppToken = JwtHelper.CreateToken(claims.ToArray(), 72);
+                user.AppToken = JwtHelper.CreateToken([.. claims], 72);
                 loginResponse.MapToModel(user);
                 
                 await _appDbContext.SaveChangesAsync();

@@ -11,9 +11,12 @@ using Compunet.YoloV8.Plotting;
 using SixLabors.ImageSharp;
 using Dietary.DataAccess.Extensions;
 using static Dietary.Helpers.FileHelper;
+using Dietary.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dietary.Controllers
 {
+    [AllowAnonymous]
     [Route("[controller]")]
     [ApiController]
     public class FoodController(ILogger<FoodController> logger, IFoodService service) : BaseController<
@@ -40,14 +43,29 @@ namespace Dietary.Controllers
 
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
-                string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
+                // string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
                 using var predictor = YoloV8Predictor.Create(modelPath);
                 var result = await predictor.DetectAsync(imgPath);
 
-                using var image = Image.Load(imgPath);
-                using var ploted = await result.PlotImageAsync(image);
-                ploted.Save(plotPath);
+                List<DetailPredictResponse> predictResults = result.Boxes.Select(box => new DetailPredictResponse()
+                {
+                    Name = box.Class.Name.ToTitleCase(),
+                    PredictResult = new(box)
+                }).ToList();
+
+                List<DetailPredictResponse> foods = [.. _service.GetAll<DetailPredictResponse>(
+                    food => predictResults
+                            .Select(box => box.Name)
+                            .Distinct().ToList().Any(name => name == food.Name))
+                ];
+
+                foreach (var item in predictResults)
+                    item.MapToModel(foods.Where(x => x.Name == item.Name).FirstOrDefault());
+
+                // using var image = Image.Load(imgPath);
+                // using var ploted = await result.PlotImageAsync(image);
+                // ploted.Save(plotPath);
 
                 if (System.IO.File.Exists(imgPath))
                 {
@@ -55,7 +73,7 @@ namespace Dietary.Controllers
                     _logger.LogInformation("File Deleted!");
                 }
 
-                return new SuccessApiResponse(string.Format(MessageConstant.Success), result);
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), predictResults);
             }
             catch (Exception ex)
             {
