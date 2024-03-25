@@ -32,6 +32,13 @@ namespace Dietary.Controllers
         {
             return Ok(await _service.SearchV2(request));
         }
+        [HttpPost("food-search-v2-seeding")]
+        public async Task<ActionResult> FoodSearchV2Seeding(FoodSearchV2Request request)
+        {
+            FoodSearchV2Response response = await _service.SearchV2(request);
+            await _service.BulkInsert(response);
+            return Ok(response);
+        }
         [HttpPost("scrap")]
         public async Task<ActionResult> Scrap(string url)
         {

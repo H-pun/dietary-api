@@ -12,9 +12,7 @@ namespace Dietary.DataAccess.Services
     {
         public async Task BulkInsert(List<CreateFoodRequest> foodRequests)
         {
-            List<Food> foods = [];
-            foreach (var food in foodRequests)
-                foods.Add(food.MapToEntity<Food>());
+            List<Food> foods = [.. foodRequests.Select(x => x.MapToEntity<Food>())];
 
             await _appDbContext.Set<Food>().AddRangeAsync(foods);
             await _appDbContext.SaveChangesAsync();

@@ -14,6 +14,7 @@ namespace Dietary.DataAccess.Services
         Task<AccessTokenResponse> GetAccessToken();
         Task<dynamic> SearchV2(FoodSearchV2Request v2Request);
         Task<CreateFoodRequest> Scrap(CreateFoodRequest food);
+        Task BulkInsert(FoodSearchV2Response model);
     }
     public class FatSecretService : BaseService<FatSecretFood>, IFatSecretService
     {
@@ -118,6 +119,12 @@ namespace Dietary.DataAccess.Services
             }
 
             return food;
+        }
+        public async Task BulkInsert(FoodSearchV2Response model)
+        {
+            List<FatSecretFood> foods = model.MaptoListEntity<FatSecretFood>();
+            await _appDbContext.Set<FatSecretFood>().AddRangeAsync(foods);
+            await _appDbContext.SaveChangesAsync();
         }
         private async Task SetToken()
         {

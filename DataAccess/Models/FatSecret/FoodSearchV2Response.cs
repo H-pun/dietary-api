@@ -2,6 +2,7 @@
 using Dietary.Base;
 using Dietary.DataAccess.Entities;
 using Dietary.Helpers;
+using AutoMapper;
 
 namespace Dietary.DataAccess.Models
 {
@@ -11,8 +12,12 @@ namespace Dietary.DataAccess.Models
         public int TotalResults { get; set; } = data.total_results;
         public int PageNumber { get; set; } = data.page_number;
         public List<FatSecretFoodResponse> Foods { get; set; } = ((IEnumerable<dynamic>)data.results.food).Select(x => new FatSecretFoodResponse(x)).ToList();
+        public override List<TEntity> MaptoListEntity<TEntity>()
+        {
+            return [.. Foods.Select(food => food.MapToEntity<TEntity>())];
+        }
     }
-    public class FatSecretFoodResponse(dynamic data)
+    public class FatSecretFoodResponse(dynamic data) : BaseModel
     {
         public long FoodId { get; set; } = data.food_id;
         public string FoodName { get; set; } = data.food_name;
@@ -20,8 +25,15 @@ namespace Dietary.DataAccess.Models
         public string FoodType { get; set; } = data.food_type;
         public string FoodUrl { get; set; } = data.food_url;
         public List<FatSecretServingResponse> Servings { get; set; } = ((IEnumerable<dynamic>)data.servings.serving).Select(x => new FatSecretServingResponse(x)).ToList();
+        public override TEntity MapToEntity<TEntity>()
+        {
+            IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<FatSecretFoodResponse, FatSecretFood>().ForMember(dest => dest.Servings, opt => opt.Ignore())).CreateMapper();
+            FatSecretFood entity = mapper.Map<FatSecretFoodResponse, FatSecretFood>(this);
+            entity.Servings = [.. Servings.Select(serving => serving.MapToEntity<FatSecretServing>())];
+            return entity as TEntity;
+        }
     }
-    public class FatSecretServingResponse(dynamic data)
+    public class FatSecretServingResponse(dynamic data) : BaseModel
     {
         public long ServingId { get; set; } = data.serving_id;
         public string ServingDescription { get; set; } = data.serving_description;

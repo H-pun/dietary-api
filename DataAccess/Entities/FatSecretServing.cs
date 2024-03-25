@@ -13,7 +13,7 @@ namespace Dietary.DataAccess.Entities
         public string ServingUrl { get; set; }
         public float NumberOfUnits { get; set; }
         public string MeasurementDescription { get; set; }
-        public int IsDefault { get; set; }
+        public bool IsDefault { get; set; }
         public float Calories { get; set; }
         public float Carbohydrate { get; set; }
         public float Protein { get; set; }
