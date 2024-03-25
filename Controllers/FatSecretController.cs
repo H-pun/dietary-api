@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Dietary.Base;
@@ -13,26 +13,29 @@ namespace Dietary.Controllers
     [AllowAnonymous]
     [Route("[controller]")]
     [ApiController]
-    public class FatSecretController(ILogger<FatSecretController> logger, FatSecretService fatSecretService, IFoodService foodService) : ControllerBase
+    public class FatSecretController(ILogger<FatSecretController> logger, IFatSecretService service) : BaseController<
+        CreateFatSecretRequest,
+        UpdateFatSecretRequest,
+        DetailFatSecretResponse,
+        FatSecretFood>(service)
     {
         private readonly ILogger<FatSecretController> _logger = logger;
-        private readonly FatSecretService _fatSecretService = fatSecretService;
-        private readonly IFoodService _foodService = foodService;
+        private readonly IFatSecretService _service = service;
 
         [HttpGet("get-token")]
         public async Task<ActionResult> GetAccessToken()
         {
-            return Ok(await _fatSecretService.GetAccessToken());
+            return Ok(await _service.GetAccessToken());
         }
         [HttpPost("food-search-v2")]
         public async Task<ActionResult> FoodSearchV2(FoodSearchV2Request request)
         {
-            return Ok(await _fatSecretService.SearchV2(request));
+            return Ok(await _service.SearchV2(request));
         }
         [HttpPost("scrap")]
         public async Task<ActionResult> Scrap(string url)
         {
-            return Ok(await _fatSecretService.Scrap(new() { Url = url }));
+            return Ok(await _service.Scrap(new() { Url = url }));
         }
     }
 }
