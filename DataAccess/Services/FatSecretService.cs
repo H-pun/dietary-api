@@ -20,6 +20,7 @@ namespace Dietary.DataAccess.Services
         protected readonly HttpClient _client = new();
         protected readonly HttpContext _httpContext;
         public readonly IConfiguration _configuration;
+        private AccessTokenResponse _token;
         private readonly List<CreateFoodRequest> foods =
         [
             new() { Name = "Ayam Bakar", Url= "https://www.fatsecret.co.id/kalori-gizi/umum/paha-ayam-panggang-(kulit-dimakan)?portionid=6417&portionamount=1,000"},
@@ -57,10 +58,7 @@ namespace Dietary.DataAccess.Services
             _configuration = configuration;
             _httpContext = httpContextAccessor.HttpContext;
             _client.DefaultRequestHeaders.Add("User-Agent", "Other");
-            _client.DefaultRequestHeaders.Authorization = new(
-                "Basic", Convert.ToBase64String(
-                    Encoding.ASCII.GetBytes($"{configuration["FatSecretClientId"]}:{configuration["FatSecretClientSecret"]}")
-                ));
+            _client.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{configuration["FatSecretClientId"]}:{configuration["FatSecretClientSecret"]}")));
         }
         public async Task<AccessTokenResponse> GetAccessToken()
         {
@@ -73,11 +71,8 @@ namespace Dietary.DataAccess.Services
         }
         public async Task<dynamic> SearchV2(FoodSearchV2Request v2Request)
         {
+            await SetToken();
             var request = new FoodSearchV2RequestAPI(v2Request);
-            var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ4NDUzNUJFOUI2REY5QzM3M0VDNUNBRTRGMEJFNUE2QTk3REQ3QkMiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJTRVUxdnB0dC1jTno3Rnl1VHd2bHBxbDkxN3cifQ.eyJuYmYiOjE3MTEzNjAyMzksImV4cCI6MTcxMTQ0NjYzOSwiaXNzIjoiaHR0cHM6Ly9vYXV0aC5mYXRzZWNyZXQuY29tIiwiYXVkIjpbImJhcmNvZGUiLCJiYXNpYyIsImxvY2FsaXphdGlvbiIsInByZW1pZXIiXSwiY2xpZW50X2lkIjoiYWUyMWJmNWM1Yjg0NGRiZThlMDQ1MGM5ZTFjZmM0MTYiLCJzY29wZSI6WyJiYXJjb2RlIiwiYmFzaWMiLCJsb2NhbGl6YXRpb24iLCJwcmVtaWVyIl19.hmZB_64pbGHI3Ek4D_UgWIptVP66g9cOmMb6vacgN7xxR9zq_jaOnd8ic8OtDHD-lZLqCISKpwvgCJt9DP4lbilw0X1vmNvctrNfE7YHBJHjzTUyYTw2q0ynbkK1eMiFpA-UwK4ua7A6rZL6JY8fHef-dQ3EiF3zDlZrf_xN0xocNHs1z6iBnGJkyhSUgQHIEm5GBTFiFHc0gqcDbEJ7NslVEvfFsIZx6UoxnPVF1WSsIrzgQA9T1hlshKiCMwSFMhmkQauIWcZ4YytkKxrBNd43TFA3VjXTim7cq5ZvHACnsb7Z0bT5id69emH8FPV3LR_HMfZx7C--xQf1Xe2xGw";
-            //JsonConvert.DeserializeObject<AccessTokenResponse>(_httpContext.Session.GetString("fatsecretToken"));
-
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _client.PostAsync("https://platform.fatsecret.com/rest/server.api", request.ToFormData());
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<dynamic>(responseString).foods_search;
@@ -123,6 +118,12 @@ namespace Dietary.DataAccess.Services
             }
 
             return food;
+        }
+        private async Task SetToken()
+        {
+            var tokenString = _httpContext.Session.GetString("fatsecretToken");
+            _token = tokenString != null ? JsonConvert.DeserializeObject<AccessTokenResponse>(tokenString) : await GetAccessToken();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token.AccessToken);
         }
     }
 }

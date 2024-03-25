@@ -28,7 +28,7 @@ namespace Dietary.DataAccess.Models
         public string ServingUrl { get; set; } = data.serving_url;
         public float NumberOfUnits { get; set; } = data.number_of_units;
         public string MeasurementDescription { get; set; } = data.measurement_description;
-        public int IsDefault { get; set; } = data.is_default ?? 0;
+        public bool IsDefault { get; set; } = data.is_default == 1;
         public float Calories { get; set; } = data.calories;
         public float Carbohydrate { get; set; } = data.carbohydrate;
         public float Protein { get; set; } = data.protein;
