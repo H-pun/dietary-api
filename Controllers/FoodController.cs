@@ -50,11 +50,15 @@ namespace Dietary.Controllers
 
                 var detectedFood = result.Boxes.Select(box => box.Class.Name.ToTitleCase()).Distinct().ToList();
                 List<DetailFoodResponse> foods = [.. _service.GetAll<DetailFoodResponse>(food => detectedFood.Any(name => name == food.Name))];
-                List<DetailPredictResponse> predictResults = result.Boxes.Select(box => new DetailPredictResponse
+                DetailPredictResponse predictResult = new()
                 {
-                    FoodDetail = foods.Where(x => x.Name == box.Class.Name.ToTitleCase()).FirstOrDefault(),
-                    PredictResult = new(box)
-                }).ToList();
+                    Foods = result.Boxes.Select(box => new PredictedFood
+                    {
+                        FoodDetail = foods.Where(x => x.Name == box.Class.Name.ToTitleCase()).FirstOrDefault(),
+                        PredictResult = new(box)
+                    }).ToList(),
+                    ProcessTime = result.Speed,
+                };
 
                 // using var image = Image.Load(imgPath);
                 // using var ploted = await result.PlotImageAsync(image);
@@ -66,7 +70,7 @@ namespace Dietary.Controllers
                     _logger.LogInformation("File Deleted!");
                 }
 
-                return new SuccessApiResponse(string.Format(MessageConstant.Success), predictResults);
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), predictResult);
             }
             catch (Exception ex)
             {
