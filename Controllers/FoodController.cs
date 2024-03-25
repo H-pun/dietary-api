@@ -48,20 +48,13 @@ namespace Dietary.Controllers
                 using var predictor = YoloV8Predictor.Create(modelPath);
                 var result = await predictor.DetectAsync(imgPath);
 
-                List<DetailPredictResponse> predictResults = result.Boxes.Select(box => new DetailPredictResponse()
+                var detectedFood = result.Boxes.Select(box => box.Class.Name.ToTitleCase()).Distinct().ToList();
+                List<DetailFoodResponse> foods = [.. _service.GetAll<DetailFoodResponse>(food => detectedFood.Any(name => name == food.Name))];
+                List<DetailPredictResponse> predictResults = result.Boxes.Select(box => new DetailPredictResponse
                 {
-                    Name = box.Class.Name.ToTitleCase(),
+                    FoodDetail = foods.Where(x => x.Name == box.Class.Name.ToTitleCase()).FirstOrDefault(),
                     PredictResult = new(box)
                 }).ToList();
-
-                List<DetailPredictResponse> foods = [.. _service.GetAll<DetailPredictResponse>(
-                    food => predictResults
-                            .Select(box => box.Name)
-                            .Distinct().ToList().Any(name => name == food.Name))
-                ];
-
-                foreach (var item in predictResults)
-                    item.MapToModel(foods.Where(x => x.Name == item.Name).FirstOrDefault());
 
                 // using var image = Image.Load(imgPath);
                 // using var ploted = await result.PlotImageAsync(image);

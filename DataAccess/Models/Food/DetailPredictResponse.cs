@@ -6,8 +6,9 @@ using AutoMapper;
 
 namespace Dietary.DataAccess.Models
 {
-    public class DetailPredictResponse : DetailFoodResponse
+    public class DetailPredictResponse : BaseModel
     {
+        public DetailFoodResponse FoodDetail { get; set; }
         public PredictResult PredictResult { get; set; }
 
         public void MapToModel(DetailFoodResponse detailFood)
