@@ -12,7 +12,7 @@ namespace Dietary.DataAccess.Services
     public interface IFatSecretService : IBaseService<FatSecretFood>
     {
         Task<AccessTokenResponse> GetAccessToken();
-        Task<dynamic> SearchV2(FoodSearchV2Request v2Request);
+        Task<FoodSearchV2Response> SearchV2(FoodSearchV2Request v2Request);
         Task<CreateFoodRequest> Scrap(CreateFoodRequest food);
         Task BulkInsert(FoodSearchV2Response model);
     }
@@ -70,7 +70,7 @@ namespace Dietary.DataAccess.Services
 
             return JsonConvert.DeserializeObject<AccessTokenResponse>(responseString);
         }
-        public async Task<dynamic> SearchV2(FoodSearchV2Request v2Request)
+        public async Task<FoodSearchV2Response> SearchV2(FoodSearchV2Request v2Request)
         {
             await SetToken();
             var request = new FoodSearchV2RequestAPI(v2Request);
