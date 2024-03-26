@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dietary.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240324213130_removeSugar")]
-    partial class removeSugar
+    [Migration("20240326120533_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,167 @@ namespace Dietary.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dietary.DataAccess.Entities.FatSecretFood", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("BrandName")
+                        .HasColumnType("text")
+                        .HasColumnName("brand_name");
+
+                    b.Property<long>("FoodId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("food_id");
+
+                    b.Property<string>("FoodName")
+                        .HasColumnType("text")
+                        .HasColumnName("food_name");
+
+                    b.Property<string>("FoodType")
+                        .HasColumnType("text")
+                        .HasColumnName("food_type");
+
+                    b.Property<string>("FoodUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("food_url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_fat_secret_food");
+
+                    b.ToTable("fat_secret_food", (string)null);
+                });
+
+            modelBuilder.Entity("Dietary.DataAccess.Entities.FatSecretServing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<float>("AddedSugars")
+                        .HasColumnType("real")
+                        .HasColumnName("added_sugars");
+
+                    b.Property<float>("Calcium")
+                        .HasColumnType("real")
+                        .HasColumnName("calcium");
+
+                    b.Property<float>("Calories")
+                        .HasColumnType("real")
+                        .HasColumnName("calories");
+
+                    b.Property<float>("Carbohydrate")
+                        .HasColumnType("real")
+                        .HasColumnName("carbohydrate");
+
+                    b.Property<float>("Cholesterol")
+                        .HasColumnType("real")
+                        .HasColumnName("cholesterol");
+
+                    b.Property<float>("Fat")
+                        .HasColumnType("real")
+                        .HasColumnName("fat");
+
+                    b.Property<float>("Fiber")
+                        .HasColumnType("real")
+                        .HasColumnName("fiber");
+
+                    b.Property<Guid>("IdFatSecretFood")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id_fat_secret_food");
+
+                    b.Property<float>("Iron")
+                        .HasColumnType("real")
+                        .HasColumnName("iron");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_default");
+
+                    b.Property<string>("MeasurementDescription")
+                        .HasColumnType("text")
+                        .HasColumnName("measurement_description");
+
+                    b.Property<float>("MetricServingAmount")
+                        .HasColumnType("real")
+                        .HasColumnName("metric_serving_amount");
+
+                    b.Property<string>("MetricServingUnit")
+                        .HasColumnType("text")
+                        .HasColumnName("metric_serving_unit");
+
+                    b.Property<float>("MonounsaturatedFat")
+                        .HasColumnType("real")
+                        .HasColumnName("monounsaturated_fat");
+
+                    b.Property<float>("NumberOfUnits")
+                        .HasColumnType("real")
+                        .HasColumnName("number_of_units");
+
+                    b.Property<float>("PolyunsaturatedFat")
+                        .HasColumnType("real")
+                        .HasColumnName("polyunsaturated_fat");
+
+                    b.Property<float>("Potassium")
+                        .HasColumnType("real")
+                        .HasColumnName("potassium");
+
+                    b.Property<float>("Protein")
+                        .HasColumnType("real")
+                        .HasColumnName("protein");
+
+                    b.Property<float>("SaturatedFat")
+                        .HasColumnType("real")
+                        .HasColumnName("saturated_fat");
+
+                    b.Property<string>("ServingDescription")
+                        .HasColumnType("text")
+                        .HasColumnName("serving_description");
+
+                    b.Property<long>("ServingId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("serving_id");
+
+                    b.Property<string>("ServingUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("serving_url");
+
+                    b.Property<float>("Sodium")
+                        .HasColumnType("real")
+                        .HasColumnName("sodium");
+
+                    b.Property<float>("Sugar")
+                        .HasColumnType("real")
+                        .HasColumnName("sugar");
+
+                    b.Property<float>("TransFat")
+                        .HasColumnType("real")
+                        .HasColumnName("trans_fat");
+
+                    b.Property<float>("VitaminA")
+                        .HasColumnType("real")
+                        .HasColumnName("vitamin_a");
+
+                    b.Property<float>("VitaminC")
+                        .HasColumnType("real")
+                        .HasColumnName("vitamin_c");
+
+                    b.Property<float>("VitaminD")
+                        .HasColumnType("real")
+                        .HasColumnName("vitamin_d");
+
+                    b.HasKey("Id")
+                        .HasName("pk_fat_secret_serving");
+
+                    b.HasIndex("IdFatSecretFood")
+                        .HasDatabaseName("ix_fat_secret_serving_id_fat_secret_food");
+
+                    b.ToTable("fat_secret_serving", (string)null);
+                });
 
             modelBuilder.Entity("Dietary.DataAccess.Entities.Food", b =>
                 {
@@ -227,6 +388,18 @@ namespace Dietary.DataAccess.Migrations
                     b.ToTable("data_protection_keys", (string)null);
                 });
 
+            modelBuilder.Entity("Dietary.DataAccess.Entities.FatSecretServing", b =>
+                {
+                    b.HasOne("Dietary.DataAccess.Entities.FatSecretFood", "FatSecretFood")
+                        .WithMany("Servings")
+                        .HasForeignKey("IdFatSecretFood")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_fat_secret_serving_fat_secret_food_id_fat_secret_food");
+
+                    b.Navigation("FatSecretFood");
+                });
+
             modelBuilder.Entity("Dietary.DataAccess.Entities.FoodDiary", b =>
                 {
                     b.HasOne("Dietary.DataAccess.Entities.User", "User")
@@ -249,6 +422,11 @@ namespace Dietary.DataAccess.Migrations
                         .HasConstraintName("fk_user_data_user_id_user");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Dietary.DataAccess.Entities.FatSecretFood", b =>
+                {
+                    b.Navigation("Servings");
                 });
 
             modelBuilder.Entity("Dietary.DataAccess.Entities.User", b =>

@@ -13,6 +13,7 @@ using Dietary.DataAccess.Extensions;
 using static Dietary.Helpers.FileHelper;
 using Dietary.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace Dietary.Controllers
 {
@@ -70,16 +71,18 @@ namespace Dietary.Controllers
                     _logger.LogInformation("File Deleted!");
                 }
 
+                if (result.Boxes.Length == 0)
+                    throw new HttpRequestException("No food detected!", null, HttpStatusCode.BadRequest);
+
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), predictResult);
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ErrorApiResponse(ex.Message, statusCode: (int)ex.StatusCode);
             }
             catch (Exception ex)
             {
-                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message,
-                new
-                {
-                    OuterException = ex.Message,
-                    InnerException = ex.InnerException.Message,
-                });
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
     }
