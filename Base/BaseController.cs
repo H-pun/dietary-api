@@ -107,7 +107,22 @@ namespace Dietary.Base
                    TimeSpan.FromMilliseconds(100)).ToLowerInvariant();
         }
     }
+    public class BoolConverter : Newtonsoft.Json.JsonConverter
+    {
+        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            return reader.Value.ToString() == "1";
+        }
 
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(bool);
+        }
+    }
     public class UtcDateTimeConverterHelper : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

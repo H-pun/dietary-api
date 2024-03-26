@@ -3,28 +3,32 @@ using Dietary.Base;
 using Dietary.DataAccess.Entities;
 using Dietary.Helpers;
 using AutoMapper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Dietary.DataAccess.Models
 {
-    public class FoodSearchV2Response(dynamic data) : BaseModel
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class FoodSearchV2Response : BaseModel
     {
-        public int MaxResults { get; set; } = data.max_results;
-        public int TotalResults { get; set; } = data.total_results;
-        public int PageNumber { get; set; } = data.page_number;
-        public List<FatSecretFoodResponse> Foods { get; set; } = ((IEnumerable<dynamic>)data.results.food).Select(x => new FatSecretFoodResponse(x)).ToList();
+        public int MaxResults { get; set; }
+        public int TotalResults { get; set; }
+        public int PageNumber { get; set; }
+        public List<FatSecretFoodResponse> Foods { get; set; }
         public override List<TEntity> MaptoListEntity<TEntity>()
         {
             return [.. Foods.Select(food => food.MapToEntity<TEntity>())];
         }
     }
-    public class FatSecretFoodResponse(dynamic data) : BaseModel
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class FatSecretFoodResponse : BaseModel
     {
-        public long FoodId { get; set; } = data.food_id;
-        public string FoodName { get; set; } = data.food_name;
-        public string BrandName { get; set; } = data.brand_name;
-        public string FoodType { get; set; } = data.food_type;
-        public string FoodUrl { get; set; } = data.food_url;
-        public List<FatSecretServingResponse> Servings { get; set; } = ((IEnumerable<dynamic>)data.servings.serving).Select(x => new FatSecretServingResponse(x)).ToList();
+        public long FoodId { get; set; }
+        public string FoodName { get; set; }
+        public string BrandName { get; set; }
+        public string FoodType { get; set; }
+        public string FoodUrl { get; set; }
+        public List<FatSecretServingResponse> Servings { get; set; }
         public override TEntity MapToEntity<TEntity>()
         {
             IMapper mapper = new MapperConfiguration(cfg => cfg.CreateMap<FatSecretFoodResponse, FatSecretFood>().ForMember(dest => dest.Servings, opt => opt.Ignore())).CreateMapper();
@@ -33,34 +37,36 @@ namespace Dietary.DataAccess.Models
             return entity as TEntity;
         }
     }
-    public class FatSecretServingResponse(dynamic data) : BaseModel
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class FatSecretServingResponse : BaseModel
     {
-        public long ServingId { get; set; } = data.serving_id;
-        public string ServingDescription { get; set; } = data.serving_description;
-        public string ServingUrl { get; set; } = data.serving_url;
-        public float NumberOfUnits { get; set; } = data.number_of_units;
-        public string MeasurementDescription { get; set; } = data.measurement_description;
-        public bool IsDefault { get; set; } = data.is_default == 1;
-        public float Calories { get; set; } = data.calories;
-        public float Carbohydrate { get; set; } = data.carbohydrate;
-        public float Protein { get; set; } = data.protein;
-        public float Fat { get; set; } = data.fat;
-        public float SaturatedFat { get; set; } = data.saturated_fat ?? 0;
-        public float TransFat { get; set; } = data.trans_fat ?? 0;
-        public float Cholesterol { get; set; } = data.cholesterol ?? 0;
-        public float Sodium { get; set; } = data.sodium ?? 0;
-        public float Potassium { get; set; } = data.potassium ?? 0;
-        public float Fiber { get; set; } = data.fiber ?? 0;
-        public float Sugar { get; set; } = data.sugar ?? 0;
-        public float AddedSugars { get; set; } = data.added_sugars ?? 0;
-        public float Calcium { get; set; } = data.calcium ?? 0;
-        public float Iron { get; set; } = data.iron ?? 0;
-        public float MetricServingAmount { get; set; } = data.metric_serving_amount ?? 0;
-        public string MetricServingUnit { get; set; } = data.metric_serving_unit;
-        public float PolyunsaturatedFat { get; set; } = data.polyunsaturated_fat ?? 0;
-        public float MonounsaturatedFat { get; set; } = data.monounsaturated_fat ?? 0;
-        public float VitaminD { get; set; } = data.vitamin_d ?? 0;
-        public float VitaminA { get; set; } = data.vitamin_a ?? 0;
-        public float VitaminC { get; set; } = data.vitamin_c ?? 0;
+        public long ServingId { get; set; }
+        public string ServingDescription { get; set; }
+        public string ServingUrl { get; set; }
+        public float NumberOfUnits { get; set; }
+        public string MeasurementDescription { get; set; }
+        [JsonConverter(typeof(BoolConverter))]
+        public bool IsDefault { get; set; }
+        public float Calories { get; set; }
+        public float Carbohydrate { get; set; }
+        public float Protein { get; set; }
+        public float Fat { get; set; }
+        public float SaturatedFat { get; set; }
+        public float TransFat { get; set; }
+        public float Cholesterol { get; set; }
+        public float Sodium { get; set; }
+        public float Potassium { get; set; }
+        public float Fiber { get; set; }
+        public float Sugar { get; set; }
+        public float AddedSugars { get; set; }
+        public float Calcium { get; set; }
+        public float Iron { get; set; }
+        public float MetricServingAmount { get; set; }
+        public string MetricServingUnit { get; set; }
+        public float PolyunsaturatedFat { get; set; }
+        public float MonounsaturatedFat { get; set; }
+        public float VitaminD { get; set; }
+        public float VitaminA { get; set; }
+        public float VitaminC { get; set; }
     }
 }

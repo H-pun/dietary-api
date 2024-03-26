@@ -5,6 +5,7 @@ using Dietary.DataAccess.Entities;
 using Dietary.DataAccess.Extensions;
 using Dietary.DataAccess.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Dietary.DataAccess.Services
@@ -76,8 +77,11 @@ namespace Dietary.DataAccess.Services
             var request = new FoodSearchV2RequestAPI(v2Request);
             var response = await _client.PostAsync("https://platform.fatsecret.com/rest/server.api", request.ToFormData());
             var responseString = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<dynamic>(responseString).foods_search;
-            return new FoodSearchV2Response(result);
+            var json = JObject.Parse(responseString)["foods_search"] as JObject;
+            json.Add(new JProperty("foods", json["results"]["food"]));
+            foreach (var food in json["foods"]) food["servings"] = food["servings"]["serving"];
+            FoodSearchV2Response res = json.ToObject<FoodSearchV2Response>();
+            return res;
         }
         public async Task<List<CreateFoodRequest>> GetSeeder()
         {
