@@ -128,7 +128,10 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-builder.Services.AddDataProtection().PersistKeysToDbContext<AppDbContext>();
+builder.Services.AddDataProtection()
+    .SetApplicationName("Dietary")
+    .PersistKeysToDbContext<AppDbContext>()
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
 
 //builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -148,8 +151,6 @@ Assembly.GetExecutingAssembly()
         var serviceType = assignedTypes.GetInterfaces().First(i => !i.IsGenericType);
         builder.Services.AddScoped(serviceType, assignedTypes);
     });
-
-builder.Services.AddScoped<FatSecretService>();
 
 var app = builder.Build();
 
