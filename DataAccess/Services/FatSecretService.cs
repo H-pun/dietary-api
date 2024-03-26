@@ -14,7 +14,7 @@ namespace Dietary.DataAccess.Services
         Task<AccessTokenResponse> GetAccessToken();
         Task<FoodSearchV2Response> SearchV2(FoodSearchV2Request v2Request);
         Task<CreateFoodRequest> Scrap(CreateFoodRequest food);
-        Task BulkInsert(FoodSearchV2Response model);
+        Task<int> BulkInsert(FoodSearchV2Response model);
     }
     public class FatSecretService : BaseService<FatSecretFood>, IFatSecretService
     {
@@ -123,11 +123,12 @@ namespace Dietary.DataAccess.Services
 
             return food;
         }
-        public async Task BulkInsert(FoodSearchV2Response model)
+        public async Task<int> BulkInsert(FoodSearchV2Response model)
         {
-            List<FatSecretFood> foods = model.MaptoListEntity<FatSecretFood>();
+            List<FatSecretFood> foods = [.. model.MaptoListEntity<FatSecretFood>().Where(newFood => !_appDbContext.Set<FatSecretFood>().Any(exixtingFood => newFood.FoodName == exixtingFood.FoodName && newFood.BrandName == exixtingFood.BrandName))];
             await _appDbContext.Set<FatSecretFood>().AddRangeAsync(foods);
             await _appDbContext.SaveChangesAsync();
+            return foods.Count;
         }
         private async Task SetToken()
         {

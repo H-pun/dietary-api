@@ -23,26 +23,60 @@ namespace Dietary.Controllers
         private readonly IFatSecretService _service = service;
 
         [HttpGet("get-token")]
-        public async Task<ActionResult> GetAccessToken()
+        public async Task<ActionResult<AccessTokenResponse>> GetAccessToken()
         {
-            return Ok(await _service.GetAccessToken());
+            try
+            {
+                var token = await _service.GetAccessToken();
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), token);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
         }
         [HttpPost("food-search-v2")]
-        public async Task<ActionResult> FoodSearchV2(FoodSearchV2Request request)
+        public async Task<ActionResult<FoodSearchV2Response>> FoodSearchV2(FoodSearchV2Request request)
         {
-            return Ok(await _service.SearchV2(request));
+            try
+            {
+                var searchResult = await _service.SearchV2(request);
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), searchResult);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
         }
         [HttpPost("food-search-v2-seeding")]
-        public async Task<ActionResult> FoodSearchV2Seeding(FoodSearchV2Request request)
+        public async Task<ActionResult<FoodSearchSeedingResponse>> FoodSearchV2Seeding(FoodSearchV2Request request)
         {
-            FoodSearchV2Response response = await _service.SearchV2(request);
-            await _service.BulkInsert(response);
-            return Ok(response);
+            try
+            {
+                FoodSearchV2Response searchResponse = await _service.SearchV2(request);
+                FoodSearchSeedingResponse seedingResponse = new(searchResponse)
+                {
+                    TotalDataInserted = await _service.BulkInsert(searchResponse)
+                };
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), seedingResponse);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
         }
         [HttpPost("scrap")]
         public async Task<ActionResult> Scrap(string url)
         {
-            return Ok(await _service.Scrap(new() { Url = url }));
+            try
+            {
+                var scrappedData = await _service.Scrap(new() { Url = url });
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), scrappedData);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
         }
     }
 }
