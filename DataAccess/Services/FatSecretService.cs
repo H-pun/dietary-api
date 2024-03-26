@@ -7,7 +7,6 @@ using Dietary.DataAccess.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-
 namespace Dietary.DataAccess.Services
 {
     public interface IFatSecretService : IBaseService<FatSecretFood>

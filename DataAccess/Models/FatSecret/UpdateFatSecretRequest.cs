@@ -5,7 +5,7 @@ using Dietary.Helpers;
 
 namespace Dietary.DataAccess.Models
 {
-    public class UpdateFatSecretRequest : BaseModel
+    public class UpdateFatSecretRequest : FatSecretFoodResponse
     {
         public Guid Id { get; set; }
     }

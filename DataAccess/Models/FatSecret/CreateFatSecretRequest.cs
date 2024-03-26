@@ -5,7 +5,7 @@ using Dietary.Helpers;
 
 namespace Dietary.DataAccess.Models
 {
-    public class CreateFatSecretRequest : BaseModel
+    public class CreateFatSecretRequest : FatSecretFoodResponse
     {
     }
 }

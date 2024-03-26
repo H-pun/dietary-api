@@ -6,15 +6,9 @@ using AutoMapper;
 
 namespace Dietary.DataAccess.Models
 {
-    public class DetailFatSecretResponse : BaseModel
+    public class DetailFatSecretResponse : FatSecretFoodResponse
     {
         public Guid Id { get; set; }
-        public long FoodId { get; set; }
-        public string FoodName { get; set; }
-        public string BrandName { get; set; }
-        public string FoodType { get; set; }
-        public string FoodUrl { get; set; }
-        public List<FatSecretServingResponse> Servings { get; set; }
         public DetailFatSecretResponse()
         {
             IncludeProperty(["Servings"]);
