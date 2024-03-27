@@ -83,6 +83,7 @@ namespace Dietary.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error Occured!");
+                _logger.LogError(ex.InnerException, "Error Occured!");
                 return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
