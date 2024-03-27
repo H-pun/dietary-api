@@ -7,6 +7,7 @@ using Dietary.DataAccess.Models.Constants;
 using Dietary.DataAccess.Models;
 using Dietary.DataAccess.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dietary.Controllers
 {
@@ -72,6 +73,19 @@ namespace Dietary.Controllers
             {
                 var scrappedData = await _service.Scrap(new() { Url = url });
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), scrappedData);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
+            }
+        }
+        [HttpGet("name/{name}")]
+        public ActionResult<List<DetailFatSecretResponse>> GetByName(string name)
+        {
+            try
+            {
+                List<DetailFatSecretResponse> models = _baseService.GetAll<DetailFatSecretResponse>(x => EF.Functions.ILike(x.FoodName, $"%{name}%") && x.FoodType == "Generic");
+                return new SuccessApiResponse(string.Format(MessageConstant.Success), models);
             }
             catch (Exception ex)
             {
