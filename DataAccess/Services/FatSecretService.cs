@@ -22,38 +22,6 @@ namespace Dietary.DataAccess.Services
         protected readonly HttpContext _httpContext;
         public readonly IConfiguration _configuration;
         private AccessTokenResponse _token;
-        private readonly List<CreateFoodRequest> foods =
-        [
-            new() { Name = "Ayam Bakar", Url= "https://www.fatsecret.co.id/kalori-gizi/umum/paha-ayam-panggang-(kulit-dimakan)?portionid=6417&portionamount=1,000"},
-            new() { Name = "Ayam Goreng", Url= "https://www.fatsecret.co.id/kalori-gizi/umum/paha-ayam-goreng-tanpa-pelapis-(kulit-dimakan)?portionid=5675&portionamount=1,000"},
-            new() { Name = "Bakso", Url="https://www.fatsecret.co.id/kalori-gizi/umum/bakso-daging-sapi?portionid=570240&portionamount=1,000"},
-            new() { Name = "Bakwan", Url= "https://www.fatsecret.co.id/kalori-gizi/umum/bakwan?portionid=5125714&portionamount=1,000"},
-            // new() { Name = "Batagor", Url = "https://www.example.com/batagor" },
-            new() { Name = "Bihun", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/bihun-goreng?portionid=10145518&portionamount=1,000" },
-            new() { Name = "Capcay", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/cap-cay-kuah?portionid=8088335&portionamount=1,000" },
-            new() { Name = "Gado-Gado", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/gado-gado?portionid=8730722&portionamount=1,000" },
-            new() { Name = "Ikan Goreng", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/ikan-tongkol-goreng?portionid=6406307&portionamount=1,000" },
-            new() { Name = "Kerupuk", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/kerupuk-putih?portionid=34466335&portionamount=1,000" },
-            new() { Name = "Martabak Telur", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/martabak-telur?portionid=19305165&portionamount=1,000" },
-            new() { Name = "Mie", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/mie-telur-(ditambah-masak)?portionid=40394&portionamount=1,000" },
-            new() { Name = "Nasi Goreng", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/nasi-goreng?portionid=18686&portionamount=1,000" },
-            new() { Name = "Nasi Putih", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/nasi-putih?portionid=17592&portionamount=1,000" },
-            new() { Name = "Nugget", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/chicken-nugget?portionid=5851&portionamount=1,000" },
-            new() { Name = "Opor Ayam", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/opor-ayam?portionid=9706245&portionamount=1,000" },
-            // new() { Name = "Pempek", Url = "https://www.example.com/pempek" },
-            new() { Name = "Rendang", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/rendang?portionid=5737372&portionamount=1,000" },
-            new() { Name = "Roti", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/roti?portionid=333747&portionamount=1,000" },
-            // new() { Name = "Sate", Url = "https://www.example.com/sate" },
-            new() { Name = "Sosis", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/sosis-ayam?portionid=342766&portionamount=1,000" },
-            new() { Name = "Soto", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/soto-ayam?portionid=5702664&portionamount=1,000" },
-            // new() { Name = "Steak", Url = "https://www.example.com/steak" },
-            new() { Name = "Tahu", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/tahu-goreng?portionid=37727&portionamount=1,000" },
-            new() { Name = "Telur", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/telur?portionid=12039&portionamount=1,000" },
-            new() { Name = "Tempe", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/tempe-goreng?portionid=4968998&portionamount=1,000" },
-            // new() { Name = "Terong Balado", Url = "https://www.example.com/terong_balado" },
-            new() { Name = "Tumis Kangkung", Url = "https://www.fatsecret.co.id/kalori-gizi/umum/tumis-kangkung?portionid=5049096&portionamount=1,000" },
-            // new() { Name = "Udang", Url = "https://www.example.com/udang" }
-        ];
         public FatSecretService(AppDbContext appDbContext, IHttpContextAccessor httpContextAccessor, IConfiguration configuration) : base(appDbContext)
         {
             _configuration = configuration;
@@ -81,12 +49,6 @@ namespace Dietary.DataAccess.Services
             foreach (var food in json["foods"]) food["servings"] = food["servings"]["serving"];
             FoodSearchV2Response res = json.ToObject<FoodSearchV2Response>();
             return res;
-        }
-        public async Task<List<CreateFoodRequest>> GetSeeder()
-        {
-            List<CreateFoodRequest> foodData = [];
-            foreach (var food in foods) foodData.Add(await Scrap(food));
-            return foodData;
         }
         public async Task<CreateFoodRequest> Scrap(CreateFoodRequest food)
         {

@@ -13,5 +13,6 @@ namespace Dietary.DataAccess.Entities
         public string FoodType { get; set; }
         public string FoodUrl { get; set; }
         public ICollection<FatSecretServing> Servings { get; set; } = new HashSet<FatSecretServing>();
+        public Food Food { get; set; }
     }
 }
