@@ -15,6 +15,7 @@ using Dietary.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using SixLabors.Fonts;
+using Newtonsoft.Json;
 
 namespace Dietary.Controllers
 {
@@ -62,7 +63,7 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                _logger.LogInformation(SystemFonts.Families.ToList().ToString());
+                _logger.LogInformation(JsonConvert.SerializeObject(SystemFonts.Families.ToList()));
 
                 using var image = Image.Load(imgPath);
                 using var ploted = await result.PlotImageAsync(image);
