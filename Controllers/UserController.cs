@@ -12,7 +12,7 @@ namespace Dietary.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserController(ILogger<UserController> logger, IUserService service, FatSecretService fatSecretService) : BaseController<
+    public class UserController(ILogger<UserController> logger, IUserService service) : BaseController<
         RegisterUserRequest,
         UpdateUserRequest,
         DetailUserResponse,
@@ -20,7 +20,6 @@ namespace Dietary.Controllers
     {
         private readonly ILogger<UserController> _logger = logger;
         private readonly IUserService _service = service;
-        private readonly FatSecretService _fatSecretService = fatSecretService;
 
         [AllowAnonymous]
         [HttpPost("login")]
