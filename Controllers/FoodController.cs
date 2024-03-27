@@ -55,7 +55,7 @@ namespace Dietary.Controllers
                 {
                     Foods = result.Boxes.Select(box => new PredictedFood
                     {
-                        FoodDetail = foods.Where(x => x.Name == box.Class.Name.ToTitleCase()).FirstOrDefault(),
+                        FoodDetail = foods.Where(x => x.ModelName == box.Class.Name.ToTitleCase()).FirstOrDefault(),
                         PredictResult = new(box)
                     }).ToList(),
                     ProcessTime = result.Speed,

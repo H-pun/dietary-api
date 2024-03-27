@@ -13,7 +13,7 @@ namespace Dietary.DataAccess.Services
     {
         Task<AccessTokenResponse> GetAccessToken();
         Task<FoodSearchV2Response> SearchV2(FoodSearchV2Request v2Request);
-        Task<CreateFoodRequest> Scrap(CreateFoodRequest food);
+        Task<dynamic> Scrap(string food);
         Task<int> BulkInsert(FoodSearchV2Response model);
     }
     public class FatSecretService : BaseService<FatSecretFood>, IFatSecretService
@@ -50,14 +50,14 @@ namespace Dietary.DataAccess.Services
             FoodSearchV2Response res = json.ToObject<FoodSearchV2Response>();
             return res;
         }
-        public async Task<CreateFoodRequest> Scrap(CreateFoodRequest food)
+        public async Task<dynamic> Scrap(string url)
         {
-            HttpResponseMessage response = await _client.GetAsync(food.Url);
+            HttpResponseMessage response = await _client.GetAsync(url);
             var document = await response.ParseHtml();
 
             var webName = document.QuerySelector(".summarypanelcontent h1").TextContent.Trim();
             var portion = document.QuerySelector(".summarypanelcontent h2");
-            var portionDetail = portion.FirstChild.TextContent[2..].Trim();
+            var portionDetail = portion.FirstChild.TextContent.Trim();
 
             var spanText = portion.QuerySelector("span")?.TextContent.Trim();
             if (spanText != null) portionDetail += portionDetail == "porsi" ? $" {spanText.Replace(" ", "")}" : $" {spanText}";
@@ -70,8 +70,11 @@ namespace Dietary.DataAccess.Services
                     { "Prot", "Protein" }
                 };
 
-            food.WebName = webName;
-            food.Unit = portionDetail;
+            var result = new Dictionary<string, dynamic>
+            {
+                { "WebName", webName },
+                { "unit", portionDetail }
+            };
 
             var nutrients = document.QuerySelector("div.factPanel");
             var facts = nutrients.QuerySelectorAll("td.fact");
@@ -80,10 +83,10 @@ namespace Dietary.DataAccess.Services
             {
                 var factTitle = fact.QuerySelector(".factTitle").TextContent.Trim();
                 var factValue = float.Parse(fact.QuerySelector(".factValue").TextContent.Replace(',', '.').Trim().TrimEnd('g'));
-                food.GetType().GetProperty(propAlias[factTitle]).SetValue(food, factValue);
+                result.Add(propAlias[factTitle], factValue);
             }
 
-            return food;
+            return result;
         }
         public async Task<int> BulkInsert(FoodSearchV2Response model)
         {

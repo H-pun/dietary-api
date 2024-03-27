@@ -29,6 +29,6 @@ namespace Dietary.DataAccess.Models
     {
         public List<PredictedFood> Foods { get; set; }
         public SpeedResult ProcessTime { get; set; }
-        public float TotalCalories => Foods.Select(x => x.FoodDetail.Calories).Sum();
+        public float TotalCalories => Foods.Select(x => x.FoodDetail.Serving.Calories).Sum();
     }
 }

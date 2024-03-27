@@ -71,7 +71,7 @@ namespace Dietary.Controllers
         {
             try
             {
-                var scrappedData = await _service.Scrap(new() { Url = url });
+                var scrappedData = await _service.Scrap(url);
                 return new SuccessApiResponse(string.Format(MessageConstant.Success), scrappedData);
             }
             catch (Exception ex)
