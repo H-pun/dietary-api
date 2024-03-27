@@ -14,6 +14,7 @@ using static Dietary.Helpers.FileHelper;
 using Dietary.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using SixLabors.Fonts;
 
 namespace Dietary.Controllers
 {
@@ -61,17 +62,17 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                if (System.IO.File.Exists(imgPath))
-                {
-                    // System.IO.File.Delete(imgPath);
-                    // _logger.LogInformation("File Deleted!");
-                    _logger.LogInformation(imgPath);
-                }
+                _logger.LogInformation(SystemFonts.Families.ToList().ToString());
 
                 using var image = Image.Load(imgPath);
-                _logger.LogInformation(image.ToString());
                 using var ploted = await result.PlotImageAsync(image);
                 ploted.Save(plotPath);
+
+                if (System.IO.File.Exists(imgPath))
+                {
+                    System.IO.File.Delete(imgPath);
+                    _logger.LogInformation("File Deleted!");
+                }
 
                 if (result.Boxes.Length == 0)
                     throw new HttpRequestException("No food detected!", null, HttpStatusCode.BadRequest);
@@ -84,6 +85,10 @@ namespace Dietary.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Occured!");
+                _logger.LogError(ex.InnerException, "Error Occured!");
+                _logger.LogInformation(ex.Message);
+                _logger.LogInformation(ex.InnerException.Message);
                 return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
