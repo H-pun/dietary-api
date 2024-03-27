@@ -61,15 +61,17 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                using var image = Image.Load(imgPath);
-                using var ploted = await result.PlotImageAsync(image);
-                ploted.Save(plotPath);
-
                 if (System.IO.File.Exists(imgPath))
                 {
-                    System.IO.File.Delete(imgPath);
-                    _logger.LogInformation("File Deleted!");
+                    // System.IO.File.Delete(imgPath);
+                    // _logger.LogInformation("File Deleted!");
+                    _logger.LogInformation(imgPath);
                 }
+
+                using var image = Image.Load(imgPath);
+                _logger.LogInformation(image.ToString());
+                using var ploted = await result.PlotImageAsync(image);
+                ploted.Save(plotPath);
 
                 if (result.Boxes.Length == 0)
                     throw new HttpRequestException("No food detected!", null, HttpStatusCode.BadRequest);
@@ -82,10 +84,6 @@ namespace Dietary.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error Occured!");
-                _logger.LogError(ex.InnerException, "Error Occured!");
-                _logger.LogInformation(ex.Message);
-                _logger.LogInformation(ex.InnerException.Message);
                 return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
