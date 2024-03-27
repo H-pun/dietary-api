@@ -8,12 +8,12 @@ namespace Dietary.DataAccess.Seeders
 {
     public static class Seeder
     {
-        public static async Task Seed<TEntity, TSeed>(AppDbContext _appDbContext) where TEntity : BaseEntity where TSeed : IBaseSeed<TEntity>, new()
+        public static async Task SeedFood(AppDbContext _appDbContext)
         {
-            if (!_appDbContext.Set<TEntity>().Any())
+            if (!_appDbContext.Set<FatSecretFood>().Any())
             {
-                var foods = new TSeed().GetSeeder();
-                await _appDbContext.Set<TEntity>().AddRangeAsync(foods);
+                var foods = FoodSeed.GetSeeder();
+                await _appDbContext.Set<Food>().AddRangeAsync(foods);
                 await _appDbContext.SaveChangesAsync();
             }
         }

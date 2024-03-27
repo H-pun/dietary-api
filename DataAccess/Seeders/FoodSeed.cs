@@ -6,9 +6,9 @@ using Dietary.DataAccess.Models;
 
 namespace Dietary.DataAccess.Seeders
 {
-    public class FoodSeed : IBaseSeed<Food>
+    public static class FoodSeed
     {
-        private readonly List<Food> Foods =
+        private static readonly List<Food> Foods =
         [
             new() { Name = "Ayam Bakar", IdFatSecret = new Guid("d7352727-e6ef-4a7d-b778-02b6c085908e") },
             new() { Name = "Ayam Goreng", IdFatSecret = new Guid("99713a3c-d660-4cf4-90c6-e887985b7494") },
@@ -36,7 +36,7 @@ namespace Dietary.DataAccess.Seeders
             new() { Name = "Tumis Kangkung", IdFatSecret = new Guid("0cf2a01c-ba9e-4fdc-a02f-d0489a74cd5d") },
             new() { Name = "Udang", IdFatSecret = new Guid("d3139a4e-781c-47d7-9316-891dd75a4535") }
         ];
-        public List<Food> GetSeeder()
+        public static List<Food> GetSeeder()
         {
             return Foods;
         }

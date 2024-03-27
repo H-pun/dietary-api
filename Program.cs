@@ -14,7 +14,6 @@ using Dietary.DataAccess;
 using Dietary.DataAccess.Models;
 using Dietary.DataAccess.Services;
 using Dietary.DataAccess.Seeders;
-using Dietary.DataAccess.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -190,7 +189,7 @@ using (var scope = app.Services.CreateScope())
     AppDbContext appContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await appContext.Database.MigrateAsync();
 
-    await Seeder.Seed<Food, FoodSeed>(appContext);
+    await Seeder.SeedFood(appContext);
 }
 
 app.Run();
