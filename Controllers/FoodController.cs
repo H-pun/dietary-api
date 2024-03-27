@@ -44,7 +44,7 @@ namespace Dietary.Controllers
 
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
-                // string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
+                string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
                 using var predictor = YoloV8Predictor.Create(modelPath);
                 var result = await predictor.DetectAsync(imgPath);
@@ -61,9 +61,9 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                // using var image = Image.Load(imgPath);
-                // using var ploted = await result.PlotImageAsync(image);
-                // ploted.Save(plotPath);
+                using var image = Image.Load(imgPath);
+                using var ploted = await result.PlotImageAsync(image);
+                ploted.Save(plotPath);
 
                 if (System.IO.File.Exists(imgPath))
                 {
@@ -82,6 +82,7 @@ namespace Dietary.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Occured!");
                 return new ErrorApiResponse(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
