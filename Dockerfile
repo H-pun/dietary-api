@@ -21,8 +21,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Dietary.dll"]
-
-# Download default font to plot image
-RUN wget -P /usr/share/fonts https://fonts.cdnfonts.com/css/microsoft-yahei
-# Install font
-RUN fc-cache -f -v
