@@ -62,8 +62,8 @@ namespace Dietary.Controllers
                     }).ToList(),
                     ProcessTime = result.Speed,
                 };
-                
-                SystemFonts.CreateFont("Default", 12f);
+
+                // SystemFonts.CreateFont("Default", 12f);
 
                 _logger.LogInformation(JsonConvert.SerializeObject(SystemFonts.Families.ToList()));
 

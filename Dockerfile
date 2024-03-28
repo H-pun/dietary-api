@@ -1,6 +1,18 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+# FROM ubuntu:latest
+
+# Install font package (contoh: fontconfig)
+# RUN apt-get update && apt-get install -y fontconfig
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
+# Salin font ke dalam direktori /usr/share/fonts
+COPY ./fonts /usr/share/fonts
+
+# Jalankan fc-cache untuk memperbarui cache font
+RUN fc-cache -f -v
+
 WORKDIR /app
 EXPOSE 8080
 
