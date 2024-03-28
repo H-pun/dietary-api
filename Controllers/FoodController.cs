@@ -14,6 +14,7 @@ using static Dietary.Helpers.FileHelper;
 using Dietary.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using SixLabors.Fonts;
 
 namespace Dietary.Controllers
 {
@@ -43,6 +44,7 @@ namespace Dietary.Controllers
                 });
 
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
+                string fontPath = Path.Combine(baseDir, "fonts", "CascadiaCode.ttf");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
                 string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
@@ -60,6 +62,11 @@ namespace Dietary.Controllers
                     }).ToList(),
                     ProcessTime = result.Speed,
                 };
+
+                // Add fonts
+                FontCollection collection = new();
+                collection.Add(fontPath);
+                FontCollectionExtensions.AddSystemFonts(collection);
 
                 using var image = Image.Load(imgPath);
                 using var ploted = await result.PlotImageAsync(image);
