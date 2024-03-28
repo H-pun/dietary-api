@@ -44,7 +44,7 @@ namespace Dietary.Controllers
 
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
-                // string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
+                string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
 
                 using var predictor = YoloV8Predictor.Create(modelPath);
                 var result = await predictor.DetectAsync(imgPath);
@@ -61,14 +61,16 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                // using var image = Image.Load(imgPath);
-                // using var ploted = await result.PlotImageAsync(image);
-                // ploted.Save(plotPath);
+                using var image = Image.Load(imgPath);
+                using var ploted = await result.PlotImageAsync(image);
+                ploted.Save(plotPath);
 
                 if (System.IO.File.Exists(imgPath))
                 {
                     System.IO.File.Delete(imgPath);
-                    _logger.LogInformation("File Deleted!");
+                    predictResult.ImagePlotPath = $"/upload/predict/plot-{fileName}";
+                    _logger.LogInformation("Original file deleted!");
+                    _logger.LogInformation($"New plot file path :{plotPath}");
                 }
 
                 if (result.Boxes.Length == 0)
