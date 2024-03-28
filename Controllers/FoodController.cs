@@ -44,6 +44,7 @@ namespace Dietary.Controllers
                     FilePath = $"predict/{fileName}"
                 });
 
+                string fontPath = Path.Combine(baseDir, "fonts", "FiraMono-Regular.ttf");
                 string modelPath = Path.Combine(baseDir, "model", "best.onnx");
                 string imgPath = Path.Combine(baseDir, "upload", "predict", fileName);
                 string plotPath = Path.Combine(baseDir, "upload", "predict", $"plot-{fileName}");
@@ -67,8 +68,12 @@ namespace Dietary.Controllers
 
                 _logger.LogInformation(JsonConvert.SerializeObject(SystemFonts.Families.ToList()));
 
+
                 using var image = Image.Load(imgPath);
-                using var ploted = await result.PlotImageAsync(image);
+                using var ploted = await result.PlotImageAsync(image, new()
+                {
+                    FontFamily = new FontCollection().Add(fontPath)
+                });
                 ploted.Save(plotPath);
 
                 if (System.IO.File.Exists(imgPath))
