@@ -7,11 +7,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-# Salin font ke dalam direktori /usr/share/fonts
-COPY ./fonts /usr/share/fonts
-
-# Jalankan fc-cache untuk memperbarui cache font
-RUN fc-cache -f -v
+RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
+RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
 WORKDIR /app
 EXPOSE 8080
