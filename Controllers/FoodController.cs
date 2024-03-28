@@ -63,13 +63,9 @@ namespace Dietary.Controllers
                     ProcessTime = result.Speed,
                 };
 
-                // Add fonts
-                FontCollection collection = new();
-                collection.Add(fontPath);
-                FontCollectionExtensions.AddSystemFonts(collection);
 
                 using var image = Image.Load(imgPath);
-                using var ploted = await result.PlotImageAsync(image);
+                using var ploted = await result.PlotImageAsync(image, new() { FontFamily = new FontCollection().Add(fontPath) });
                 ploted.Save(plotPath);
 
                 if (System.IO.File.Exists(imgPath))
